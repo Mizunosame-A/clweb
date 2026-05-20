@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="BIG5">
+</head>
+    <style>
+        .circle-img {
+            border-radius: 50%;
+        }
+        .selected-cell {
+            background-color: #e0e0e0;
+        }
+    </style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<body style='margin:0px'>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>璨融策略 - 雲端化企業訓練管理系統</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&amp;family=Noto+Sans+TC:wght@300;400&amp;display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px; 
+}
+
+:root{
+    --primary:#1088f9;
+    --secondary:#38ffa9;
+    --bg:#eef5f7;
+    --dark:#0f172a;
+    --white:#ffffff;
+}
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+body{
+    font-family:'Roboto','Noto Sans TC',sans-serif;
+    font-weight:300;
+    background:var(--bg);
+    color:var(--dark);
+    overflow-x:hidden;
+}
+.navbar{
+    position:fixed;
+    width:100%;
+    top:0;
+    left:0;
+    z-index:999;
+    backdrop-filter:blur(12px);
+    background:rgba(255,255,255,0.75);
+    border-bottom:1px solid rgba(255,255,255,0.2);
+}
+.nav-container{
+    width:90%;
+    margin:auto;
+    height:80px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+.logo{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+.logo img{
+    width:52px;
+    height:52px;
+    object-fit:contain;
+}
+.logo-text{
+    font-size:1.2rem;
+    font-weight:400;
+    color:var(--primary);
+}
+.menu{
+    display:flex;
+    gap:32px;
+}
+.menu a{
+    color:#333;
+    text-decoration:none;
+    transition:0.3s;
+}
+.menu a:hover{
+    color:var(--primary);
+}
+.hero{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:120px 8% 80px;
+    overflow:hidden;
+}
+
+.hero-bg{
+    position:absolute;
+    inset:0;
+    background:
+    linear-gradient(
+        135deg,
+        rgba(15, 23, 42, 0.85), 
+        rgba(16, 136, 249, 0.45) 
+    ),
+    url('hero-bg.jpg');
+    background-size:cover;
+    background-position:center;
+    z-index:-2;
+}
+.hero::before{
+    content:"";
+    position:absolute;
+    width:700px;
+    height:700px;
+    background:
+    radial-gradient(circle,
+    rgba(56,255,169,0.15), 
+    transparent 70%);
+    top:-150px;
+    right:-200px;
+    z-index:-1;
+}
+.hero-content{
+    max-width:1200px;
+    width:100%;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:60px;
+    align-items:center;
+}
+
+.hero-left h1{
+    font-size:4rem;
+    line-height:1.2;
+    color:#ffffff !important; 
+    margin-bottom:24px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5), 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+.hero-left p{
+    font-size:1.1rem;
+    color:#ffffff !important; 
+    line-height:1.8;
+    margin-bottom:36px;
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+}
+.btn-group{
+    display:flex;
+    gap:18px;
+}
+.btn{
+    padding:15px 28px;
+    border:none;
+    border-radius:4px;
+    background:linear-gradient(
+        90deg,
+        var(--primary),
+        var(--secondary)
+    );
+    color:white;
+    font-size:1rem;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    text-decoration:none;
+}
+.btn-outline{
+    background:transparent;
+    border:1px solid var(--primary);
+    color: var(--primary);
+}
+.hero-right{
+    display:flex;
+    justify-content:center;
+}
+.hero-right img{
+    width:100%;
+    max-width:520px;
+    border-radius:20px;
+    box-shadow:
+    0 25px 50px rgba(0,0,0,0.25);
+}
+
+/* ──────────────────────────────────────────────────────────────
+   關於我們：服務排版
+   ────────────────────────────────────────────────────────────── */
+.logo-section{
+    padding:100px 5%;
+    background:white;
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.logo-title{
+    text-align:center;
+    margin-bottom:16px;
+    color:var(--primary);
+    font-size:2.5rem;
+    font-weight: 400;
+    letter-spacing: 2px;
+}
+.logo-subtitle {
+    font-size: 1.2rem;
+    color: #64748b;
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 20px 60px;                
+    width: 100%;
+    max-width: 850px;              
+    margin: 0 auto;                
+}
+.service-item {
+    display: flex;
+    align-items: center;           
+    gap: 20px;
+    padding: 8px 12px;
+    transition: 0.3s;
+    cursor: pointer; 
+}
+.service-item:hover {
+    transform: translateX(5px);
+    background: rgba(16, 136, 249, 0.04); 
+    border-radius: 8px;
+}
+
+/* 數字圓圈樣式 */
+.service-number {
+    min-width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 10px rgba(16, 136, 249, 0.2);
+}
+.item-orange .service-number { background-color: #f97316; box-shadow: 0 4px 10px rgba(249, 115, 22, 0.2); }
+.item-pink .service-number { background-color: #ec4899; box-shadow: 0 4px 10px rgba(236, 72, 153, 0.2); }
+.item-green .service-number { background-color: #10b981; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2); }
+.item-purple .service-number { background-color: #a855f7; box-shadow: 0 4px 10px rgba(168, 85, 247, 0.2); }
+
+.service-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.service-main-title {
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: #1e293b;
+}
+.service-sub-title {
+    font-size: 0.95rem;
+    color: #64748b;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   彈跳詳細資訊視窗樣式 (Modal CSS)
+   ────────────────────────────────────────────────────────────── */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.7); 
+    backdrop-filter: blur(8px);       
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+.modal-content {
+    background: #ffffff;
+    width: 90%;
+    max-width: 650px;
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    position: relative;
+    transform: translateY(-30px);
+    transition: transform 0.3s ease;
+    max-height: 85vh;
+    overflow-y: auto; 
+}
+.modal-overlay.active .modal-content {
+    transform: translateY(0);
+}
+.modal-close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #f1f5f9;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    transition: 0.2s;
+}
+.modal-close-btn:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+.modal-header-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    background: rgba(16, 136, 249, 0.1);
+    color: var(--primary);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+.modal-title {
+    font-size: 1.8rem;
+    color: #0f172a;
+    margin-bottom: 8px;
+    font-weight: 400;
+}
+.modal-subtitle {
+    font-size: 1.1rem;
+    color: #64748b;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 15px;
+}
+.modal-desc {
+    font-size: 1.05rem;
+    color: #334155;
+    line-height: 1.8;
+    margin-bottom: 25px;
+}
+.modal-image {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    display: none; 
+}
+
+/* ──────────────────────────────────────────────────────────────
+   聯絡我們進階 Footer
+   ────────────────────────────────────────────────────────────── */
+footer {
+    padding: 80px 8% 40px;
+    background: #0f172a;           
+    color: white;
+    border-top: 4px solid var(--primary);
+}
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.2fr 1.8fr; 
+    gap: 60px;
+    text-align: left;
+}
+.footer-brand h2 {
+    font-size: 1.6rem;
+    color: white;
+    margin-bottom: 15px;
+    font-weight: 400;
+}
+.footer-brand p {
+    color: #94a3b8;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    margin-bottom: 25px;
+}
+.footer-nav {
+    display: flex;
+    gap: 20px;
+}
+.footer-nav a {
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: 0.3s;
+}
+.footer-nav a:hover {
+    color: var(--primary);
+}
+
+.footer-contact-box {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.contact-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 20px 25px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: 0.3s ease-in-out;
+}
+.contact-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(16, 136, 249, 0.4);
+    transform: translateY(-2px);
+}
+.contact-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    background: rgba(16, 136, 249, 0.15); 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.contact-icon i {
+    color: #38bdf8;                
+    font-size: 1.4rem;
+}
+.contact-info-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.contact-label {
+    font-size: 0.85rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.contact-value {
+    font-size: 1.15rem;
+    color: #e2e8f0;
+}
+.footer-bottom {
+    max-width: 1200px;
+    margin: 60px auto 0;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 0.9rem;
+    color: #64748b;
+    text-align: center;
+}
+
+/* ────────────────────────────────────────────────────────────── */
+.cards{
+    padding:100px 8%;
+}
+.card-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:30px;
+}
+.card{
+    background:white;
+    border-radius:20px;
+    padding:40px;
+    position:relative;
+    overflow:hidden;
+    box-shadow:
+    0 10px 30px rgba(0,0,0,0.05);
+}
+.card::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:5px;
+    background:linear-gradient(
+        90deg,
+        var(--primary),
+        var(--secondary)
+    );
+}
+.card i{
+    font-size:2rem;
+    color:var(--primary);
+    margin-bottom:20px;
+}
+.card h3{
+    margin-bottom:15px;
+    font-weight:400;
+}
+.card p{
+    line-height:1.8;
+    color:#555;
+}
+
+.btn-fb-fill {
+    background-image: none !important;       
+    background-color: #1877F2 !important;     
+    color: #FFFFFF !important;               
+    border: 1px solid #166FE5 !important;    
+    font-weight: 500 !important;             
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(24, 119, 242, 0.3) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important; 
+    transition: all 0.2s ease-in-out !important;
+}
+.btn-fb-fill:hover {
+    background-image: none !important;
+    background-color: #166FE5 !important;    
+    border-color: #135CB8 !important;
+    transform: translateY(-2px) !important;  
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 6px 20px rgba(24, 119, 242, 0.4) !important;
+}
+.btn-fb-fill:active {
+    background-color: #1454A4 !important;    
+    transform: translateY(1px) !important;   
+}
+
+@media(max-width: 900px){
+    .hero-content{
+        grid-template-columns:1fr;
+        text-align:center;
+    }
+    .btn-group{
+        justify-content:center;
+    }
+    .hero-left h1{
+        font-size:2.8rem;
+    }
+    .menu{
+        display:none;
+    }
+    .services-grid {
+        grid-template-columns: 1fr; 
+        gap: 16px;
+        padding: 0 20px;
+    }
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        text-align: center;
+    }
+    .footer-nav {
+        justify-content: center;
+    }
+    .contact-card {
+        flex-direction: column;
+        padding: 20px;
+        text-align: center;
+    }
+}
+</style>
+
+
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="logo">
+            <img src="logo.png" alt="璨融策略">
+            <div class="logo-text">璨融策略有限公司</div>
+        </div>
+        <div class="menu">
+            <a href="#home">首頁</a>
+            <a href="#about-us">關於我們</a>
+            <a href="#core-tech">核心技術</a>
+            <a href="#footer-info">聯絡我們</a>
+        </div>
+    </div>
+</nav>
+
+<section class="hero" id="home">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+        <div class="hero-left">
+            <h1>ESG × 人才培育</h1>
+            <p><b style="font-size: 20px;">公司致力於學術資源與產業需求，為中小企業提供企業顧問諮詢與數位轉型與企業教育訓練策略規劃，協助企業申請經濟部或其他政府部門的補助計畫與輔導資源。</b></p>
+            <div class="btn-group">
+                <a href="#core-tech" class="btn">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    查看系統展示
+                </a>
+                <a href="https://www.facebook.com/search/top?q=%E7%92%A8%E8%9E%8D%E7%AD%96%E7%95%A5&amp;locale=zh_TW" class="btn btn-fb-fill" target="_blank">
+                    <i class="fa-solid fa-globe"></i>
+                    FaceBook 網站
+                </a>
+            </div>
+        </div>
+        <div class="hero-right">
+            <img src="future-image.png" alt="TurboPlus 系統架構">
+        </div>
+    </div>
+</section>
+
+<section class="logo-section" id="about-us">
+    <div class="logo-title">我們提供的專業服務</div>
+    <div class="logo-subtitle">提供企業全方位的ESG管理系統輔導、證照課程與政府補助計畫申請</div>
+    
+    <div class="services-grid">
+        <div class="service-item" onclick="openModal('ISO 9001:2015', '品質管理系統', '這是企業接軌國際、提升內部經營品質的最核心證照。&lt;br&gt;&lt;br&gt;璨融策略擁有豐富的橡膠材料、精密機械、電子與食品業等跨產業輔導經驗，協助貴公司從日常表單標準化做起，輕鬆通過品質系統評鑑。', 'iso9001-sample.jpg')">
+            <div class="service-number">1</div>
+            <div class="service-text">
+                <span class="service-main-title">ISO 9001:2015</span>
+                <span class="service-sub-title">品質管理系統</span>
+            </div>
+        </div>
+        
+        <div class="service-item item-orange" onclick="openModal('ISO 46001:2019', '水效率管理系統', '協助企業全面盤點與優化廠區製程用水、生活用水效率，達到節能減碳與環境永續經營指標。')">
+            <div class="service-number">7</div>
+            <div class="service-text">
+                <span class="service-main-title">ISO 46001:2019</span>
+                <span class="service-sub-title">水效率管理系統</span>
+            </div>
+        </div>
+
+        <div class="service-item item-green" onclick="openModal('ISO 14001:2015', '環境管理系統', '專為製造業、民生化工等產業規劃，完善廠區廢棄物、污染防制與綠色生產流程管理規範。')">
+            <div class="service-number">2</div>
+            <div class="service-text">
+                <span class="service-main-title">ISO 14001:2015</span>
+                <span class="service-sub-title">環境管理系統</span>
+            </div>
+        </div>
+
+        <div class="service-item item-pink" onclick="openModal('AA 1000', '當責性原則標準', '企業永續報告書（ESG Report）核心驗證標準，深化組織誠信經營與利害關係人溝通機制。')">
+            <div class="service-number">8</div>
+            <div class="service-text">
+                <span class="service-main-title">AA 1000</span>
+                <span class="service-sub-title">當責性原則標準</span>
+            </div>
+        </div>
+
+        <div class="service-item item-pink" onclick="openModal('ISO 14067:2018', '碳足跡', '針對單一產品生命週期（從原料、製造到出貨）進行碳排放量精準計算，協助產品突破國際綠色關稅壁壘。')">
+            <div class="service-number">3</div>
+            <div class="service-text">
+                <span class="service-main-title">ISO 14067:2018</span>
+                <span class="service-sub-title">碳足跡</span>
+            </div>
+        </div>
+
+        <div class="service-item item-orange" onclick="openModal('ISO 14064-1:2018', '組織型溫室氣體盤查與查證', '提供溫室氣體溫盤查顧問服務，協助企業建立排碳基準線，邁向 2050 淨零碳排國家轉型戰略。')">
+            <div class="service-number">9</div>
+            <div class="service-text">
+                <span class="service-main-title">ISO 14064-1:2018</span>
+                <span class="service-sub-title">組織型溫室氣體盤查與查證</span>
+            </div>
+        </div>
+
+        <div class="service-item item-orange" onclick="openModal('IATF 16949:2016', '全球汽車品質管理系統', '進入汽車供應鏈體系的關鍵通行證！嚴格導入缺陷預防、減少變異與浪費之供應鏈品質控管。')">
+            <div class="service-number">4</div>
+            <div class="service-text">
+                <span class="service-main-title">IATF 16949:2016</span>
+                <span class="service-sub-title">全球汽車品質管理系統</span>
+            </div>
+        </div>
+
+        <div class="service-item item-pink" onclick="openModal('勞動部補助計畫', '補助企業辦理教育訓練計畫', '協助中小企業無痛導入政府辦訓補助資源（包含大專人提、大人提、充電起飛計畫等）。&lt;br&gt;&lt;br&gt;每年引導企業投入員工數位技能進修，補助範圍涵蓋講師費、材料費，有效減輕企業培育人才之行政負擔。', 'hr-training-sample.jpg')">
+            <div class="service-number">10</div>
+            <div class="service-text">
+                <span class="service-main-title">勞動部</span>
+                <span class="service-sub-title">補助企業辦理教育訓練計畫</span>
+            </div>
+        </div>
+
+        <div class="service-item item-pink" onclick="openModal('ISO 50001:2018', '能源管理系統', '透過系統化管理提升製程能效，建立節能績效查核點，為廠區節省可觀的電力與能源營運成本。')">
+            <div class="service-number">5</div>
+            <div class="service-text">
+                <span class="service-main-title">ISO 50001:2018</span>
+                <span class="service-sub-title">能源管理系統</span>
+            </div>
+        </div>
+
+        <div class="service-item" onclick="openModal('經濟部產發署計畫', '補助研發計畫申請', '包含彰化縣地方型 SBIR、CITD 等研發補助計畫輔導。璨融具備豐富的專案規劃與計畫書撰寫經驗，協助企業順利獲取政府資金回饋。')">
+            <div class="service-number">11</div>
+            <div class="service-text">
+                <span class="service-main-title">經濟部產發署</span>
+                <span class="service-sub-title">補助研發計畫</span>
+            </div>
+        </div>
+
+        <div class="service-item" onclick="openModal('ISO 45001:2018', '職業安全衛生管理系統', '依據我國職業安全衛生法實施合規管理，有效預防災變與職業災害，保障企業最珍貴的人力資本。')">
+            <div class="service-number">6</div>
+            <div class="service-text">
+                <span class="service-main-title">ISO 45001:2018</span>
+                <span class="service-sub-title">職業安全衛生管理系統 (TOSHMS)</span>
+            </div>
+        </div>
+
+        <div class="service-item item-purple" onclick="openModal('TTQS人才發展品質管理系統', '人才培訓與流程品質優化', '引進政府推廣之 PDDRO 訓練體系（計畫、設計、執行、查核、成果），將教育訓練與單位的營運戰略策略進行深層串接。')">
+            <div class="service-number">12</div>
+            <div class="service-text">
+                <span class="service-main-title">TTQS 人才發展品質管理系統</span>
+                <span class="service-sub-title">人才培訓與流程品質優化</span>
+            </div>
+        </div>
+
+        <div class="service-item item-green" onclick="openModal('活動展場規劃執行', '專業展覽與企業活動統籌', '提供企業對外專業成果發表會、跨產業交流講座、偏遠或地方社區公益職能訓練等活動企劃與現場執行。')">
+            <div class="service-number">13</div>
+            <div class="service-text">
+                <span class="service-main-title">活動展場規劃執行</span>
+                <span class="service-sub-title">專業展覽與企業活動統籌</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal-overlay" id="serviceModal" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <button class="modal-close-btn" onclick="toggleModal(false)">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <span class="modal-header-badge" id="modalBadge">璨融專業輔導</span>
+        <h2 class="modal-title" id="modalTitle">服務名稱</h2>
+        <div class="modal-subtitle" id="modalSubTitle">服務子標題</div>
+        <div class="modal-desc" id="modalDesc">詳細文字資料...</div>
+        <img src="" alt="相關照片" class="modal-image" id="modalImg">
+    </div>
+</div>
+
+<section class="cards" id="core-tech">
+    <div class="card-grid">
+        <div class="card" style="transform: translateY(40px); opacity: 0; transition: 1s;">
+            <i class="fa-solid fa-cloud"></i>
+            <h3>雲端管理整合</h3>
+            <p>透過系統建立標準化辦訓流程，整合課程管理與資料自動更新，縮短 80% 以上的行政處理時間 。</p>
+        </div>
+        <div class="card" style="transform: translateY(40px); opacity: 0; transition: 1s;">
+            <i class="fa-solid fa-microchip"></i>
+            <h3>No-Code 技術</h3>
+            <p>導入 TurboPlus 無程式碼開發平台，具備高度彈性與靈活性，助力企業實現數位應用快速部署 。</p>
+        </div>
+        <div class="card" style="transform: translateY(40px); opacity: 0; transition: 1s;">
+            <i class="fa-solid fa-bell"></i>
+            <h3>智慧監控預警</h3>
+            <p>串接 LINE 智慧通知模組，提供課程提醒與即時異常監控，達成 99% 以上的系統穩定性與準確度 。</p>
+        </div>
+    </div>
+</section>
+
+<footer id="footer-info">
+    <div class="footer-container">
+        <div class="footer-brand">
+            <h2>璨融策略有限公司</h2>
+            <p>專注於企業數位轉型、精實教育訓練規劃與多項國際標準 ISO 系統輔導，引領企業在數位浪潮中實現卓越成長。</p>
+            <div class="footer-nav">
+            </div>
+        </div>
+        
+        <div class="footer-contact-box">
+            <div class="contact-card">
+                <div class="contact-icon">
+                    <i class="fa-solid fa-location-dot"></i>
+                </div>
+                <div class="contact-info-text">
+                    <span class="contact-label">公司地址</span>
+                    <span class="contact-value">彰化縣彰化市師大路2號 (育成中心3樓)</span>
+                </div>
+            </div>
+            
+            <div class="contact-card">
+                <div class="contact-icon">
+                    <i class="fa-solid fa-phone"></i>
+                </div>
+                <div class="contact-info-text">
+                    <span class="contact-label">連絡電話</span>
+                    <span class="contact-value">(04) 7117215</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer-bottom">
+        &#169; 2026 璨融策略有限公司&nbsp;</div>
+</footer>
+
+<script>
+/* ──────────────────────────────────────────────────────────────
+   彈跳視窗控制 JavaScript 邏輯
+   ────────────────────────────────────────────────────────────── */
+function toggleModal(isOpen) {
+    const modal = document.getElementById('serviceModal');
+    if (isOpen) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden'; 
+    } else {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';       
+    }
+}
+
+function openModal(title, subtitle, desc, imgSrc = '') {
+    document.getElementById('modalTitle').innerText = title;
+    document.getElementById('modalSubTitle').innerText = subtitle;
+    document.getElementById('modalDesc').innerHTML = desc; // 修正：改用 innerHTML 支援文字內包嵌 <br> 標籤
+    
+    const imgElement = document.getElementById('modalImg');
+    if (imgSrc) {
+        imgElement.src = imgSrc;
+        imgElement.style.display = 'block'; 
+    } else {
+        imgElement.style.display = 'none';  
+    }
+    
+    toggleModal(true);
+}
+
+function closeModal(event) {
+    if (event.target.id === 'serviceModal') {
+        toggleModal(false);
+    }
+}
+
+/* 原本的卡片浮現動態效果 */
+const cards = document.querySelectorAll('.card');
+window.addEventListener('scroll',()=>{
+    cards.forEach(card=>{
+        const top = card.getBoundingClientRect().top;
+        if(top < window.innerHeight - 100){
+            card.style.transform = 'translateY(0)';
+            card.style.opacity = '1';
+        }
+    });
+});
+cards.forEach(card=>{
+    card.style.transform = 'translateY(40px)';
+    card.style.opacity = '0';
+    card.style.transition = '1s';
+});
+</script>
+</body>
+</html>
+
